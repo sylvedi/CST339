@@ -1,0 +1,29 @@
+<!-- Common Header Fragment -->
+<div class="header-section" th:fragment="header"> 
+	<!-- create navigation bar ( header) -->
+	<nav class="navbar navbar-dark bg-dark bg-primary navbar-fixed-top">
+		<div class="container">
+			
+			<a class="navbar-brand" href="#" th:href="@{/}">MoMa</a>
+			
+				
+		
+        <a class="nav-link" href="/orders/all">All <span class="sr-only">(current)</span></a>
+   
+
+        <a class="nav-link" href="/orders/searchForm">Search</a>
+  
+
+        <a class="nav-link" href="/orders/addNewForm">Add</a>
+  
+
+        <a class="nav-link" href="/orders/admin">Admin</a>
+
+		<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+			
+			
+	
+		</div>
+	</nav>
+</div>
+
