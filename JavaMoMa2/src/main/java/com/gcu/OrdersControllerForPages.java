@@ -2,7 +2,7 @@ package com.gcu;
 
 import java.util.List;
 
-
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gcu.business.OrdersBusinessServiceInterface;
 import com.gcu.model.OrderModel;
@@ -102,9 +105,9 @@ public class OrdersControllerForPages {
 		return "ordersAdmin";
 		}
 		
-		@DeleteMapping("/delete") 
+		@PostMapping("/delete") 
 		// process a request from the AddOrderForm.  Add a new order to the database.  Show all orders.
-		public String deleteOrder(@Validated OrderModel order, BindingResult bindingResult, Model model) {
+		public String deleteOrder(@Valid OrderModel order, BindingResult bindingResult, Model model) {
 		// add the new order
 		ordersService.deleteOne(order.getId());
 		// get updated list of all the orders
@@ -114,6 +117,21 @@ public class OrdersControllerForPages {
 		model.addAttribute("searchModel", new SearchOrdersModel()); 
 		return "ordersAdmin";
 		}
+		
+		@RequestMapping(value="/doDelete", method = RequestMethod.POST)
+		public String deleteProduct (@RequestParam(value="_method", required=false) int id, Model model) {
+			
+			System.out.println(" This is the ID!!" + id);
+			try {
+				ordersService.deleteOne(id);
+				model.addAttribute("orders", ordersService.getOrders());
+				return "ordersAdmin";
+			}catch (Exception e) {
+				e.printStackTrace();
+				return "orders";
+			}
+		}
+		
 		
 		@PostMapping("/editForm") 
 		public String displayEditForm(OrderModel orderModel, Model model)
@@ -126,7 +144,7 @@ public class OrdersControllerForPages {
 		
 		@PostMapping("/doUpdate") 
 		// process a request from the AddOrderForm.  Add a new order to the database.  Show all orders.
-		public String updateOrder(@Validated OrderModel order, BindingResult bindingResult, Model model) {
+		public String updateOrder(@Valid OrderModel order, BindingResult bindingResult, Model model) {
 		// add the new order
 		ordersService.updateOne(order.getId(), order);
 		// get updated list of all the orders
@@ -134,8 +152,23 @@ public class OrdersControllerForPages {
 		// display all orders
 		model.addAttribute("orders", orders); 
 		model.addAttribute("searchModel", new SearchOrdersModel()); 
-		return "ordersAdmin";
+		return "ordersEditForm";
 		}
+		
+		@RequestMapping(value="/updateProduct", method = RequestMethod.POST)
+		public String updateProduct (@RequestParam(value="_method", required=false) int id, Model model) {
+			
+			System.out.println(" This is the ID!!" + id);
+			//placedHolderId = id;
+			OrderModel order = new OrderModel();
+			order.setId(id);
+			
+			model.addAttribute("title", "Update Order");
+			model.addAttribute("orderModel", order);
+			return "ordersEditForm";
+			
+		}
+		
 
 
 }

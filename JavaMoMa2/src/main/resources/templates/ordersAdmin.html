@@ -10,7 +10,7 @@ layout:decorate="layouts/defaultTemplate">
 <body>
 <div layout:fragment="content" class="container-xl">
 <h1 th:text="${title}"></h1> 
-<h2 th:text="${searchModel.searchTerm}"></h2>
+<!--<h2 th:text="${searchModel.searchTerm}"></h2>-->
 <table class="table table-striped">
 <tr class="table-primary">
 <th>ID</th>
@@ -27,11 +27,20 @@ layout:decorate="layouts/defaultTemplate">
 <td th:text="${order.quantity}"></td>
 <td>
 
-<a th:href="@{'delete/' + ${order.id}}" class="btn btn-danger" role="button">Delete</a>
+<form th:object="${orderModel}" th:action="@{doDelete}" th:method="post">
+<input type="hidden" name="_method" th:value="${order.id}">
+<button type="submit">Delete</button>
+</form>
+
 </td>
 <td>
-<a th:href="@{'editForm/' + ${order.id}}" class="btn btn-info" role="button">Edit</a>
+<form th:object="${orderModel}" th:action="@{doUpdate}" th:method="post">
+<input type="hidden" name="_method" th:value="${order.id}">
+<button type="submit">Update</button>
+</form>
+
+
 </td>
 </tr>
-
+<!--<a th:href="@{'editForm/' + ${order.id}}" class="btn btn-info" role="button">Edit</a> -->
  
